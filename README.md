@@ -1,2 +1,1 @@
-# Flash-Chat
-Lambda Chat app
+# Lambda Chat app
