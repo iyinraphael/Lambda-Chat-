@@ -2,14 +2,12 @@
 //  ViewController.swift
 //  Flash Chat
 //
-//  Created by Angela Yu on 29/08/2015.
-//  Copyright (c) 2015 London App Brewery. All rights reserved.
-//
+//  Created by Iyin Raphael on 10/30/2018.
 
 import UIKit
+import Firebase
 
-
-class ChatViewController: UIViewController {
+class ChatViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     // Declare instance variables here
 
@@ -25,7 +23,8 @@ class ChatViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        //TODO: Set yourself as the delegate and datasource here:
+        messageTableView.delegate = self
+        messageTableView.dataSource = self 
         
         
         
@@ -106,9 +105,12 @@ class ChatViewController: UIViewController {
     
     @IBAction func logOutPressed(_ sender: AnyObject) {
         
-        //TODO: Log out the user and send them back to WelcomeViewController
-        
-        
+        do{
+           try Auth.auth().signOut()
+             navigationController?.popToRootViewController(animated: true)
+        }catch {
+            NSLog("Error, there was a problrm signing out")
+        }
     }
     
 

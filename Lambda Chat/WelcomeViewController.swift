@@ -1,6 +1,6 @@
 //
 //  WelcomeViewController.swift
-//  Flash Chat
+//  Lambda Chat
 //
 //  This is the welcome view controller - the first thign the user sees
 //
