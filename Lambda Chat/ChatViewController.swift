@@ -7,7 +7,7 @@
 import UIKit
 import Firebase
 
-class ChatViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class ChatViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate{
     
     // Declare instance variables here
 
@@ -24,59 +24,56 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
         super.viewDidLoad()
         
         messageTableView.delegate = self
-        messageTableView.dataSource = self 
+        messageTableView.dataSource = self
         
-        
-        
-        //TODO: Set yourself as the delegate of the text field here:
-
+        messageTextfield.delegate = self
         
         
         //TODO: Set the tapGesture here:
         
-        
-
-        //TODO: Register your MessageCell.xib file here:
+        messageTableView.register(UINib(nibName: "MessageCell", bundle: nil), forCellReuseIdentifier: "customMessageCell")
+        configureTableView()
 
         
     }
 
-    ///////////////////////////////////////////
-    
-    //MARK: - TableView DataSource Methods
-    
-    
-    
-    //TODO: Declare cellForRowAtIndexPath here:
-    
-    
-    
-    //TODO: Declare numberOfRowsInSection here:
-    
-    
-    
-    //TODO: Declare tableViewTapped here:
-    
-    
-    
-    //TODO: Declare configureTableView here:
-    
-    
-    
-    ///////////////////////////////////////////
-    
-    //MARK:- TextField Delegate Methods
-    
     
 
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "customMessageCell", for: indexPath) as? CustomMessageCell else { return UITableViewCell()}
     
-    //TODO: Declare textFieldDidBeginEditing here:
+    }
     
     
     
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        
+    }
     
-    //TODO: Declare textFieldDidEndEditing here:
+    //TODO: Declare tableViewTapped here:
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+    }
     
+    
+    func configureTableView() {
+        messageTableView.rowHeight = UITableViewAutomaticDimension
+        messageTableView.estimatedRowHeight = 120.0
+    }
+    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        UIView.animate(withDuration: 1) {
+            self.heightConstraint.constant = 308
+            self.view.layoutIfNeeded()
+        }
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        UIView.animate(withDuration: 1) {
+            self.heightConstraint.constant = 50
+            self.view.layoutIfNeeded()
+        }
+    }
 
     
     ///////////////////////////////////////////
