@@ -12,7 +12,6 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
     // Declare instance variables here
 
     
-    // We've pre-linked the IBOutlets
     @IBOutlet var heightConstraint: NSLayoutConstraint!
     @IBOutlet var sendButton: UIButton!
     @IBOutlet var messageTextfield: UITextField!
@@ -25,11 +24,11 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         messageTableView.delegate = self
         messageTableView.dataSource = self
-        
         messageTextfield.delegate = self
         
         
-        //TODO: Set the tapGesture here:
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tableViewTapped))
+        messageTableView.addGestureRecognizer(tapGesture)
         
         messageTableView.register(UINib(nibName: "MessageCell", bundle: nil), forCellReuseIdentifier: "customMessageCell")
         configureTableView()
@@ -44,17 +43,13 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     }
     
-    
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
     }
     
-    //TODO: Declare tableViewTapped here:
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
+    @objc func tableViewTapped() {
+        messageTextfield.endEditing(true)
     }
-    
     
     func configureTableView() {
         messageTableView.rowHeight = UITableViewAutomaticDimension
@@ -87,8 +82,27 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     @IBAction func sendPressed(_ sender: AnyObject) {
         
+        messageTextfield.endEditing(true)
+        messageTextfield.isEnabled = false
+        sendButton.isEnabled = false
         
-        //TODO: Send the message to Firebase and save it in our database
+        let messagesDB = Database.database().reference().child("Messages")
+        
+        let messageDictionary = ["Sender": Auth.auth().currentUser?.email,
+                                 "MessageBody": messageTextfield.text!]
+        
+        messagesDB.childByAutoId().setValue(messageDictionary) {
+            (error, refrence) in
+            
+            if let error = error {
+                NSLog("\(error)")
+            }else{
+              
+                self.messageTextfield.isEnabled = true
+                self.sendButton.isEnabled = true
+                self.messageTextfield.text! = ""
+            }
+        }
         
         
     }
