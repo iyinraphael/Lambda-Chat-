@@ -31,8 +31,9 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
         messageTableView.addGestureRecognizer(tapGesture)
         
         messageTableView.register(UINib(nibName: "MessageCell", bundle: nil), forCellReuseIdentifier: "customMessageCell")
+        
         configureTableView()
-
+        fetchMessages()
         
     }
 
@@ -112,6 +113,9 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
             
             let message = Message(sender: sender, messageBody: text)
             self.messages.append(message)
+            
+            self.configureTableView()
+            self.messageTableView.reloadData()
         }
     }
     
