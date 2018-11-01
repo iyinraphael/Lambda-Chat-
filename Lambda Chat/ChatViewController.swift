@@ -40,11 +40,16 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "customMessageCell", for: indexPath) as? CustomMessageCell else { return UITableViewCell()}
+        let message = messages[indexPath.row]
+        cell.messageBody.text = message.messageBody
+        cell.senderUsername.text = message.sender
+        cell.avatarImageView.image = UIImage(named: "egg")
+        return cell
     
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
+        return messages.count
     }
     
     @objc func tableViewTapped() {
@@ -70,16 +75,6 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
         }
     }
 
-    
-    ///////////////////////////////////////////
-    
-    
-    //MARK: - Send & Recieve from Firebase
-    
-    
-    
-    
-    
     @IBAction func sendPressed(_ sender: AnyObject) {
         
         messageTextfield.endEditing(true)
@@ -107,11 +102,20 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
         
     }
     
-    //TODO: Create the retrieveMessages method here:
+    func fetchMessages() {
+        
+        let messageDB = Database.database().reference().child("Messages")
+        messageDB.observe(.childAdded) { (snapshot) in
+            let snapshotValue = snapshot.value as! Dictionary<String, String>
+            let text = snapshotValue["MessageBody"]!
+            let sender = snapshotValue["Sender"]!
+            
+            let message = Message(sender: sender, messageBody: text)
+            self.messages.append(message)
+        }
+    }
     
-    
-
-    
+    var messages: [Message] = [Message]()
     
     
     @IBAction func logOutPressed(_ sender: AnyObject) {
@@ -123,7 +127,5 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
             NSLog("Error, there was a problrm signing out")
         }
     }
-    
-
 
 }
